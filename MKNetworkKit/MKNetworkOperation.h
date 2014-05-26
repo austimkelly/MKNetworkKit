@@ -352,6 +352,15 @@ typedef enum {
  *  localNotification
  */
 @property (nonatomic, assign) BOOL shouldShowLocalNotificationOnError;
+
+/*!
+ * @abstract In the event that a server does not return a 304, we can allow the client to ignore the network response after the cache hit.
+ * @property shouldNotSendNetworkResponseIfCacheIsHit
+ *
+ * @discussion The default value is NO: If there is a cache hit, the calling operation will be notified once for the cache hit and once for the response (HTTP 200).
+ * When set to YES, the invoking operation will only get either the cached response, or the network response in the event the cache does not already exist.
+ */
+@property (nonatomic, assign) BOOL shouldNotSendNetworkResponseIfCacheIsHit;
 #endif
 
 /*!

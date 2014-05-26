@@ -1337,10 +1337,17 @@ totalBytesExpectedToWrite:(NSInteger)totalBytesExpectedToWrite {
   
   if (self.response.statusCode >= 200 && self.response.statusCode < 300 && ![self isCancelled]) {
     
+    BOOL hasCacheHit = self.cachedResponse == nil ? NO : YES;
+      
     self.cachedResponse = nil; // remove cached data
 
     [self notifyCache];
-    [self operationSucceeded];
+      // If we don't have a cache hit, always send the response.
+      // If we do have a cache hit, check and see if the operation has shouldNotSendNetworkResponseIfCacheIsHit set to YES
+      // so we don't notify the invoking operation more than once.
+      if (!hasCacheHit || (!self.shouldNotSendNetworkResponseIfCacheIsHit && hasCacheHit)){
+          [self operationSucceeded];
+      }
     
   }
   if (self.response.statusCode >= 300 && self.response.statusCode < 400) {
